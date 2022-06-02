@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm")
     `maven-publish`
 }
 
@@ -25,7 +25,6 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
-
 tasks.test {
     useJUnitPlatform()
 }
@@ -37,7 +36,6 @@ tasks.withType<KotlinCompile> {
 publishing {
     repositories {
         maven {
-
             name = "kotlinerx-keep"
             url = uri("https://maven.pkg.github.com/kotlinerx/keep")
             credentials {

@@ -7,7 +7,6 @@ import kotlin.test.Test
 class TestSql {
     val sqliteKeeper = Keep.sqlite("jdbc:sqlite:local/local.db")
 
-
     @Test
     fun test() {
         sqliteKeeper {
