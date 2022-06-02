@@ -4,7 +4,7 @@ import keep.sql.statement.*
 import keep.table.Table
 import java.sql.ResultSet
 
-interface SqlScope {
+interface SqlScope : SaveScope {
     fun <T : Table> drop(table: T)
     fun <T : Table> create(table: T)
     fun <T : Table> insert(table: T, block: Insert<T>.() -> Unit)

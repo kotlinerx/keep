@@ -3,9 +3,16 @@ package keep.keeper
 import keep.keeper.context.KeepContext
 import keep.keeper.source.JDBCSource
 import keep.keeper.source.buildJDBCSource
+import keep.keeper.sqlscope.Query
+import keep.keeper.sqlscope.QueryScope
+import keep.keeper.sqlscope.ResultMapper
 import keep.keeper.sqlscope.SqlScope
+import keep.sql.Condition
+import keep.sql.WhereScope
+import keep.table.Table
+import kotlin.reflect.KClass
 
-interface Keeper {
+interface Keeper : Query {
     val context: KeepContext
     operator fun <T> invoke(startTransaction: Boolean = true, block: SqlScope.() -> T): T
 }
@@ -29,4 +36,19 @@ class JDBCKeeper(
             source.close(session)
         }
     }
+
+    override val defaultMapper: ResultMapper get() = context.mapper
+
+    override fun <E : Any> obtainQueryScope(kClass: KClass<E>, mapper: ResultMapper?): QueryScope<E> =
+        object : QueryScope<E> {
+            override fun <T : Table> from(table: T, block: WhereScope.(T) -> Condition): List<E> {
+                return invoke(false) {
+                    val result = select(table) {
+                        where(block)
+                    }
+                    val m: ResultMapper = mapper ?: defaultMapper
+                    m.map(result, kClass)
+                }
+            }
+        }
 }
