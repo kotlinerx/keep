@@ -5,7 +5,7 @@ import keep.keeper.source.JDBCSource
 import keep.keeper.source.buildJDBCSource
 import keep.keeper.sqlscope.Query
 import keep.keeper.sqlscope.QueryScope
-import keep.keeper.sqlscope.ResultMapper
+import keep.keeper.mapper.ResultMapper
 import keep.keeper.sqlscope.SqlScope
 import keep.sql.Condition
 import keep.sql.WhereScope

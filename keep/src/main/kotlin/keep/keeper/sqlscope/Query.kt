@@ -1,5 +1,6 @@
 package keep.keeper.sqlscope
 
+import keep.keeper.mapper.ResultMapper
 import kotlin.reflect.KClass
 
 interface Query {

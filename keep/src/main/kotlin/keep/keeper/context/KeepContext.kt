@@ -1,7 +1,7 @@
 package keep.keeper.context
 
 import keep.analyzer.SqlAnalyzersManager
-import keep.keeper.sqlscope.ResultMapper
+import keep.keeper.mapper.ResultMapper
 
 class KeepContext(
     val config: SourceConfig,

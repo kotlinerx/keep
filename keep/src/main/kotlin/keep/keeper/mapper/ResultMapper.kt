@@ -1,4 +1,4 @@
-package keep.keeper.sqlscope
+package keep.keeper.mapper
 
 import java.sql.ResultSet
 import kotlin.reflect.KClass

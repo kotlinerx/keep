@@ -2,6 +2,9 @@ package keep.keeper.sqlscope
 
 import keep.keeper.context.KeepContext
 import keep.keeper.executor.SqlExecutor
+import keep.sql.ColumnValue
+import keep.sql.Condition
+import keep.sql.WhereScope
 import keep.sql.statement.*
 import keep.table.Column
 import keep.table.Table
@@ -9,7 +12,7 @@ import keep.table.findValue
 import java.sql.ResultSet
 
 class CommonSqlScope(
-    private val context: KeepContext,
+    override val context: KeepContext,
     private val executor: SqlExecutor,
 ) : SqlScope {
     override fun <T : Table> drop(table: T) {
@@ -31,6 +34,19 @@ class CommonSqlScope(
         val sql = Update(table).apply(block)
         return executor.executeUpdate(sql)
     }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Table> update(table: T, values: List<ColumnValue<*>>, condition: WhereScope.(T) -> Condition) {
+        update(table) {
+            set {
+                values.forEach {
+                    (it.column as Column<Any>) eq it.value
+                }
+            }
+            where(condition)
+        }
+    }
+
 
     override fun <T : Table> select(table: T, block: Select<T>.() -> Unit): ResultSet {
         val sql = Select(table).apply(block)
