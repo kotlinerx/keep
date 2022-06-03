@@ -22,9 +22,10 @@ class JDBCExecutor(
         ps.execute()
     }
 
-    override fun runInsert(sqlPrimitives: SqlPrimitives) {
+    override fun runInsert(sqlPrimitives: SqlPrimitives): ResultSet {
         val ps = prepareStatement(sqlPrimitives)
         ps.execute()
+        return ps.generatedKeys
     }
 
     override fun runUpdate(sqlPrimitives: SqlPrimitives): Int {

@@ -66,19 +66,20 @@ class CommonSqlScope(
         list.forEach { addOne(table, it) }
     }
 
-
     @Suppress("UNCHECKED_CAST")
-    override fun <E : Any, T : Table> addOne(table: T, entity: E) {
+    override fun <E : Any, T : Table> addOne(table: T, entity: E, callback: E.(ResultSet) -> E): E {
         val columns = table.columns
-        insert(table) {
-            set {
-                columns.filterNot { it.auto }.forEach {
-                    val v = it.findValue(entity)
-                    val c = (it as Column<Any>)
-                    c eq v
-                }
+        val auto: Column<*>? = columns.firstOrNull() { it.auto }
+        val insert: Insert<T> = Insert(table)
+        insert.set {
+            columns.filterNot { it.auto }.forEach {
+                val v = it.findValue(entity)
+                val c = (it as Column<Any>)
+                c eq v
             }
         }
+        val resultSet = executor.executeInsert(insert)
+        if (auto == null) return entity
+        return entity.callback(resultSet)
     }
-
 }

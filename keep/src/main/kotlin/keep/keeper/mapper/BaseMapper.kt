@@ -23,20 +23,6 @@ abstract class BaseMapper : ResultMapper {
 }
 
 class NameMapper : BaseMapper() {
-    fun <T : Any> ResultSet.valueOrNull(label: String, kClass: KClass<T>): Any? = when (kClass) {
-        String::class -> {
-            getString(label)
-        }
-        Int::class -> {
-            getInt(label)
-        }
-        Boolean::class -> {
-            getBoolean(label)
-        }
-        else -> {
-            getObject(label)
-        }
-    }
 
     override fun <E : Any> rowToEntity(row: ResultSet, constructor: KFunction<E>, kClass: KClass<E>): E {
         val map: Map<KParameter, Any?> = constructor.parameters.associateWith {

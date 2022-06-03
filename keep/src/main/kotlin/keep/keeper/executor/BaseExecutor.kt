@@ -31,12 +31,12 @@ abstract class BaseSqlExecutor : SqlExecutor {
 
     abstract fun runCreate(sqlPrimitives: SqlPrimitives)
 
-    override fun <T : Table> executeInsert(sql: Insert<T>) {
+    override fun <T : Table> executeInsert(sql: Insert<T>): ResultSet {
         val sqlPrimitives = analyzeSql(sql)
-        runInsert(sqlPrimitives)
+        return runInsert(sqlPrimitives)
     }
 
-    abstract fun runInsert(sqlPrimitives: SqlPrimitives)
+    abstract fun runInsert(sqlPrimitives: SqlPrimitives): ResultSet
 
     override fun <T : Table> executeUpdate(sql: Update<T>): Int {
         val sqlPrimitives = analyzeSql(sql)
