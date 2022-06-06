@@ -6,7 +6,10 @@ import keep.analyzer.SqlPrimitives
 import keep.sql.Sql
 import keep.sql.statement.*
 import keep.table.Table
+import mu.KotlinLogging
 import java.sql.ResultSet
+
+private val logger = KotlinLogging.logger { }
 
 abstract class BaseSqlExecutor : SqlExecutor {
     abstract val analyzers: SqlAnalyzersManager
@@ -14,7 +17,16 @@ abstract class BaseSqlExecutor : SqlExecutor {
     @Suppress("unchecked_cast")
     protected fun <S : Sql<*>> analyzeSql(sql: S): SqlPrimitives {
         val analyzer = analyzers.provideAnalyzer(sql.tag) as SqlAnalyzer<S>
-        return analyzer.analyze(sql)
+        val sqlPrimitives = analyzer.analyze(sql)
+        logger.debug { sqlPrimitives.preparedSql }
+        logger.debug {
+            "param:${
+                sqlPrimitives.parameters.joinToString(",") {
+                    it.column.label + "=" + it.value
+                }
+            } "
+        }
+        return sqlPrimitives
     }
 
     override fun <T : Table> executeDrop(sql: Drop<T>) {
@@ -53,7 +65,6 @@ abstract class BaseSqlExecutor : SqlExecutor {
     abstract fun runSelect(sqlPrimitives: SqlPrimitives): ResultSet
 
     override fun <T : Table> executeDelete(sql: Delete<T>): Int {
-
         val sqlPrimitives = analyzeSql(sql)
         return runDelete(sqlPrimitives)
     }
