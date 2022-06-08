@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "kotlinerx"
-version = "0.1.15-SNAPSHOT"
+version = "0.1.17-SNAPSHOT"
 
 repositories {
     mavenCentral()
